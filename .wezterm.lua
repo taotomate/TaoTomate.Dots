@@ -121,4 +121,27 @@ config.colors = {
 -- config.default_domain = 'WSL:Ubuntu'
 config.front_end = "OpenGL"
 
+-- ┌──────────────────────────────────────────────────────────────────────────────┐
+-- │                           KEYBINDINGS / SPLITS                               │
+-- └──────────────────────────────────────────────────────────────────────────────┘
+
+local act = wezterm.action
+config.keys = {
+	-- Split Management (alt+v = horizontal / alt+d = vertical)
+	{ key = "v", mods = "ALT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "d", mods = "ALT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+
+	-- Split Navigation (alt+h/j/k/l)
+	{ key = "h", mods = "ALT", action = act.ActivatePaneDirection("Left") },
+	{ key = "l", mods = "ALT", action = act.ActivatePaneDirection("Right") },
+	{ key = "k", mods = "ALT", action = act.ActivatePaneDirection("Up") },
+	{ key = "j", mods = "ALT", action = act.ActivatePaneDirection("Down") },
+
+	-- Split Resize (ctrl+shift+h/j/k/l)
+	{ key = "h", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
+	{ key = "l", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
+	{ key = "k", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Up", 5 }) },
+	{ key = "j", mods = "CTRL|SHIFT", action = act.AdjustPaneSize({ "Down", 5 }) },
+}
+
 return config
