@@ -64,12 +64,16 @@ function Create-Symlink {
 
     # Create link
     Write-Host "Creating symlink: $DestinationPath -> $SourcePath" -ForegroundColor Green
-    if ($Type -eq "Directory") {
-        New-Item -ItemType SymbolicLink -Path $DestinationPath -Value $SourcePath | Out-Null
-    } else {
-        New-Item -ItemType SymbolicLink -Path $DestinationPath -Value $SourcePath | Out-Null
+    try {
+        New-Item -ItemType SymbolicLink -Path $DestinationPath -Value $SourcePath -ErrorAction Stop | Out-Null
+    } catch {
+        Write-Host "CRITICAL ERROR: Failed to create symbolic link at $DestinationPath" -ForegroundColor Red
+        Write-Host "Error details: $_" -ForegroundColor DarkRed
+        Write-Host "Ensure you are running PowerShell as Administrator." -ForegroundColor Yellow
+        Exit 1
     }
 }
+
 
 Write-Host "=== TaoTomate.Dots Agent Configuration Installer ===" -ForegroundColor Green
 
