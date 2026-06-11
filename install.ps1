@@ -32,6 +32,7 @@ if (-not (Get-Command "scoop" -ErrorAction SilentlyContinue)) {
 
 if (-not (Get-Command "wezterm" -ErrorAction SilentlyContinue)) {
     Write-Host "Instalando WezTerm silenciosamente..." -ForegroundColor Yellow
+    scoop bucket add extras | Out-Null
     scoop install wezterm
 } else {
     Write-Host "WezTerm ya está instalado." -ForegroundColor Green
@@ -42,6 +43,17 @@ if (-not (Get-Command "starship" -ErrorAction SilentlyContinue)) {
     scoop install starship
 } else {
     Write-Host "Starship ya está instalado." -ForegroundColor Green
+}
+
+# Configurar Starship en el perfil de PowerShell
+$profilePath = $PROFILE
+if (-not (Test-Path $profilePath)) {
+    New-Item -Path $profilePath -Type File -Force | Out-Null
+}
+$profileContent = Get-Content $profilePath -Raw
+if (-not ($profileContent -match "starship init powershell")) {
+    Write-Host "Configurando Starship en tu perfil de PowerShell..." -ForegroundColor Yellow
+    Add-Content -Path $profilePath -Value "`nInvoke-Expression (&starship init powershell)" -Force
 }
 
 $userProfile = [System.Environment]::GetFolderPath("UserProfile")
