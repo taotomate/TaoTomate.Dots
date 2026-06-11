@@ -192,7 +192,29 @@ if (Test-Path $skillsSourceRoot) {
     }
 }
 
-# 7. Configure WezTerm & Starship
+# 7. Install Nerd Fonts (required by WezTerm config)
+Write-Host "--- Installing Nerd Fonts ---" -ForegroundColor Cyan
+if (Get-Command scoop -ErrorAction SilentlyContinue) {
+    # Add nerd-fonts bucket if not already added
+    $buckets = scoop bucket list 2>$null
+    if ($buckets -notmatch "nerd-fonts") {
+        Write-Host "Adding nerd-fonts bucket to Scoop..." -ForegroundColor Cyan
+        scoop bucket add nerd-fonts
+    }
+
+    # Install IosevkaTerm NF if not already installed
+    $fontInstalled = scoop list 2>$null | Select-String "IosevkaTerm-NF"
+    if (-not $fontInstalled) {
+        Write-Host "Installing IosevkaTerm-NF font..." -ForegroundColor Green
+        scoop install nerd-fonts/IosevkaTerm-NF
+    } else {
+        Write-Host "IosevkaTerm-NF already installed, skipping." -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "WARNING: Scoop not found. Please install IosevkaTerm NF manually from https://www.nerdfonts.com/" -ForegroundColor Yellow
+}
+
+# 8. Configure WezTerm & Starship
 $weztermDest = Join-Path $userProfile ".wezterm.lua"
 $weztermSource = Join-Path $repoRoot ".wezterm.lua"
 Create-Symlink -SourcePath $weztermSource -DestinationPath $weztermDest -Type "File"
