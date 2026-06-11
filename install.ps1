@@ -26,7 +26,8 @@ Write-Host "=== Verificando Dependencias (WezTerm / Starship) ===" -ForegroundCo
 if (-not (Get-Command "scoop" -ErrorAction SilentlyContinue)) {
     Write-Host "Instalando Scoop (Gestor de paquetes silencioso)..." -ForegroundColor Yellow
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+    # Scoop rejects Admin shells by default, so we use -RunAsAdmin
+    Invoke-Expression "& {$(Invoke-RestMethod -Uri https://get.scoop.sh)} -RunAsAdmin"
 }
 
 if (-not (Get-Command "wezterm" -ErrorAction SilentlyContinue)) {
