@@ -20,111 +20,172 @@ if (-not (Test-Path "$repoRoot\agent-config\shared\agents.md")) {
     git -C $repoRoot submodule update --init --recursive
 }
 
+# 3. Auto-Installer for Dependencies (Modo Ninite)
+Write-Host "=== Verificando Dependencias (WezTerm / Starship) ===" -ForegroundColor Cyan
+
+if (-not (Get-Command "scoop" -ErrorAction SilentlyContinue)) {
+    Write-Host "Instalando Scoop (Gestor de paquetes silencioso)..." -ForegroundColor Yellow
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+}
+
+if (-not (Get-Command "wezterm" -ErrorAction SilentlyContinue)) {
+    Write-Host "Instalando WezTerm silenciosamente..." -ForegroundColor Yellow
+    scoop install wezterm
+} else {
+    Write-Host "WezTerm ya está instalado." -ForegroundColor Green
+}
+
+if (-not (Get-Command "starship" -ErrorAction SilentlyContinue)) {
+    Write-Host "Instalando Starship silenciosamente..." -ForegroundColor Yellow
+    scoop install starship
+} else {
+    Write-Host "Starship ya está instalado." -ForegroundColor Green
+}
+
 $userProfile = [System.Environment]::GetFolderPath("UserProfile")
 
-# Helper function to safely backup existing target paths
+# Helper functions
 function Save-Backup {
-    param (
-        [string]$TargetPath
-    )
+    param ([string]$TargetPath)
     if (Test-Path $TargetPath) {
-        # Check if it's already a symlink (we don't backup symlinks, we just remove them)
-        $item = Get-Item $TargetPath
+        $item = Get-Item $TargetPath -Force
         if ($item.Attributes -match "ReparsePoint") {
-            Write-Host "Removing existing symlink: $TargetPath" -ForegroundColor Yellow
-            Remove-Item $TargetPath -Force
+            Write-Host "Removiendo symlink existente: $TargetPath" -ForegroundColor Yellow
+            Remove-Item -Path $TargetPath -Force -Recurse
             return
         }
-
-        # Safe backup naming with timestamps to avoid collisions
         $timestamp = (Get-Date).ToString("yyyyMMdd_HHmmss")
         $backupPath = "$TargetPath.bak_$timestamp"
-        
-        Write-Host "Backing up existing configuration to: $backupPath" -ForegroundColor Cyan
+        Write-Host "Creando backup de configuración existente: $backupPath" -ForegroundColor Cyan
         Move-Item -Path $TargetPath -Destination $backupPath -Force
     }
 }
 
-# Helper function to create symlinks safely
 function Create-Symlink {
     param (
         [string]$SourcePath,
         [string]$DestinationPath,
-        [string]$Type # "File" or "Directory"
+        [string]$Type
     )
-    
-    # Ensure destination parent folder exists
     $parentDir = Split-Path $DestinationPath -Parent
     if (-not (Test-Path $parentDir)) {
         New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
     }
-
-    # Backup if exists
     Save-Backup -TargetPath $DestinationPath
-
-    # Create link
-    Write-Host "Creating symlink: $DestinationPath -> $SourcePath" -ForegroundColor Green
+    Write-Host "Creando symlink: $DestinationPath -> $SourcePath" -ForegroundColor Green
     try {
         New-Item -ItemType SymbolicLink -Path $DestinationPath -Value $SourcePath -ErrorAction Stop | Out-Null
     } catch {
-        Write-Host "CRITICAL ERROR: Failed to create symbolic link at $DestinationPath" -ForegroundColor Red
-        Write-Host "Error details: $_" -ForegroundColor DarkRed
-        Write-Host "Ensure you are running PowerShell as Administrator." -ForegroundColor Yellow
+        Write-Host "CRITICAL ERROR: Falló al crear symlink en $DestinationPath" -ForegroundColor Red
+        Write-Host "Detalles: $_" -ForegroundColor DarkRed
         Exit 1
     }
 }
 
+# 4. Auto-Discovery Logic
+$pathsFile = Join-Path $repoRoot "custom_paths.json"
+$customPaths = @{}
 
-Write-Host "=== TaoTomate.Dots Agent Configuration Installer ===" -ForegroundColor Green
+if (Test-Path $pathsFile) {
+    try {
+        $customPaths = Get-Content $pathsFile | ConvertFrom-Json -AsHashtable
+    } catch {
+        $customPaths = @{}
+    }
+}
 
-# 3. Configure Gemini/Antigravity
-$geminiSkillsDest = Join-Path $userProfile ".gemini\config\skills"
+function Get-Or-Find-Path {
+    param ([string]$AgentKey, [string]$TargetFilter, [string]$DefaultPath)
+    
+    if ($customPaths.ContainsKey($AgentKey) -and (Test-Path $customPaths[$AgentKey])) {
+        return $customPaths[$AgentKey]
+    }
+    
+    if (Test-Path $DefaultPath) {
+        $customPaths[$AgentKey] = $DefaultPath
+        return $DefaultPath
+    }
+    
+    Write-Host "Buscando ruta custom para $AgentKey ($TargetFilter)..." -ForegroundColor Yellow
+    $drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Root -notmatch "^[A-B]:" }
+    foreach ($drive in $drives) {
+        Write-Host "  Escaneando $($drive.Root) ..." -NoNewline
+        $found = Get-ChildItem -Path $drive.Root -Recurse -Filter $TargetFilter -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($found) {
+            Write-Host " Encontrado: $($found.FullName)" -ForegroundColor Green
+            $customPaths[$AgentKey] = $found.FullName
+            return $found.FullName
+        }
+        Write-Host " Nada."
+    }
+    
+    Write-Host "No se encontró $AgentKey. Usando ruta por defecto: $DefaultPath" -ForegroundColor Magenta
+    $customPaths[$AgentKey] = $DefaultPath
+    return $DefaultPath
+}
+
+Write-Host "`n=== TaoTomate.Dots Agent Configuration Installer ===" -ForegroundColor Green
+
+# 5. Locate Agents
+$geminiBase = Get-Or-Find-Path -AgentKey "Antigravity" -TargetFilter ".gemini" -DefaultPath (Join-Path $userProfile ".gemini")
+$claudeBase = Get-Or-Find-Path -AgentKey "Claude" -TargetFilter ".clauderules" -DefaultPath (Join-Path $userProfile ".clauderules")
+$openCodeBase = Get-Or-Find-Path -AgentKey "OpenCode" -TargetFilter "opencode" -DefaultPath (Join-Path $userProfile ".config\opencode")
+$hermesBase = Get-Or-Find-Path -AgentKey "Hermes" -TargetFilter ".hermes" -DefaultPath (Join-Path $userProfile ".hermes")
+
+# Save paths for next time
+$customPaths | ConvertTo-Json | Set-Content $pathsFile
+
+# Normalize base paths (if file found, get directory)
+$geminiDir = if (Test-Path $geminiBase -PathType Leaf) { Split-Path $geminiBase -Parent } else { $geminiBase }
+$claudeDir = if (Test-Path $claudeBase -PathType Leaf) { Split-Path $claudeBase -Parent } else { $claudeBase }
+$opencodeDir = if (Test-Path $openCodeBase -PathType Leaf) { Split-Path $openCodeBase -Parent } else { $openCodeBase }
+$hermesDir = if (Test-Path $hermesBase -PathType Leaf) { Split-Path $hermesBase -Parent } else { $hermesBase }
+
+# 6. Apply Configurations
+$agentsFileSource = Join-Path $repoRoot "agent-config\shared\agents.md"
+$skillsSourceRoot = Join-Path $repoRoot "agent-config\skills"
+
+# Antigravity
+$geminiSkillsDest = Join-Path $geminiDir "config\skills"
 $sharedSource = Join-Path $repoRoot "agent-config\shared"
 $sharedDest = Join-Path $geminiSkillsDest "_shared"
-
-# Link _shared folder
 Create-Symlink -SourcePath $sharedSource -DestinationPath $sharedDest -Type "Directory"
 
-# Link individual skills
-$skillsSourceRoot = Join-Path $repoRoot "agent-config\skills"
 if (Test-Path $skillsSourceRoot) {
     Get-ChildItem -Directory -Path $skillsSourceRoot | ForEach-Object {
-        $skillName = $_.Name
-        $destPath = Join-Path $geminiSkillsDest $skillName
+        $destPath = Join-Path $geminiSkillsDest $_.Name
         Create-Symlink -SourcePath $_.FullName -DestinationPath $destPath -Type "Directory"
     }
 }
 
-# 4. Configure Claude Code
-$clauderulesDest = Join-Path $userProfile ".clauderules"
-$agentsFileSource = Join-Path $repoRoot "agent-config\shared\agents.md"
+# Claude Code
+$clauderulesDest = Join-Path $claudeDir ".clauderules"
 Create-Symlink -SourcePath $agentsFileSource -DestinationPath $clauderulesDest -Type "File"
 
-# 5. Configure OpenCode
-$opencodeDest = Join-Path $userProfile ".config\opencode\AGENTS.md"
+# OpenCode
+$opencodeDest = Join-Path $opencodeDir "AGENTS.md"
 Create-Symlink -SourcePath $agentsFileSource -DestinationPath $opencodeDest -Type "File"
 
-# 6. Configure Hermes Agent
-$hermesSoulDest = Join-Path $userProfile ".hermes\SOUL.md"
+# Hermes Agent
+$hermesSoulDest = Join-Path $hermesDir "SOUL.md"
 Create-Symlink -SourcePath $agentsFileSource -DestinationPath $hermesSoulDest -Type "File"
 
-$hermesSkillsDest = Join-Path $userProfile ".hermes\skills"
+$hermesSkillsDest = Join-Path $hermesDir "skills"
 if (Test-Path $skillsSourceRoot) {
     Get-ChildItem -Directory -Path $skillsSourceRoot | ForEach-Object {
-        $skillName = $_.Name
-        $destPath = Join-Path $hermesSkillsDest $skillName
+        $destPath = Join-Path $hermesSkillsDest $_.Name
         Create-Symlink -SourcePath $_.FullName -DestinationPath $destPath -Type "Directory"
     }
 }
 
-# 7. Configure WezTerm
+# 7. Configure WezTerm & Starship
 $weztermDest = Join-Path $userProfile ".wezterm.lua"
 $weztermSource = Join-Path $repoRoot ".wezterm.lua"
 Create-Symlink -SourcePath $weztermSource -DestinationPath $weztermDest -Type "File"
 
-# 8. Configure Starship
 $starshipDest = Join-Path $userProfile ".config\starship.toml"
 $starshipSource = Join-Path $repoRoot "starship.toml"
 Create-Symlink -SourcePath $starshipSource -DestinationPath $starshipDest -Type "File"
 
-Write-Host "Sincronización de Symlinks completada exitosamente!" -ForegroundColor Green
+Write-Host "`n¡Sincronización de Symlinks y Dependencias completada exitosamente!" -ForegroundColor Green
