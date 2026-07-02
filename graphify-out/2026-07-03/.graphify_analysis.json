@@ -1,0 +1,292 @@
+{
+  "communities": {
+    "0": [
+      "agent_config_agents_antigravity",
+      "agent_config_agents_base",
+      "agent_config_agents_claude_code",
+      "agent_config_agents_gemini_cli",
+      "agent_config_docs_architecture",
+      "agent_config_docs_components",
+      "agent_config_docs_load_flow",
+      "agent_config_docs_trigger_rules",
+      "agent_config_shared_audit_framework_md",
+      "agent_config_shared_routing",
+      "agent_config_shared_vision",
+      "concept_audit_axioms",
+      "concept_black_box_protocol",
+      "concept_layer_l1",
+      "concept_layer_l2",
+      "concept_layer_l3"
+    ],
+    "1": [
+      "agent_config_tools_skill_catalog_extract_description",
+      "agent_config_tools_skill_catalog_extract_skill_name",
+      "agent_config_tools_skill_catalog_extract_version",
+      "agent_config_tools_skill_catalog_parse_frontmatter",
+      "agent_config_tools_skill_catalog_rationale_45",
+      "agent_config_tools_skill_catalog_rationale_64",
+      "agent_config_tools_skill_catalog_rationale_70",
+      "agent_config_tools_skill_catalog_rationale_76",
+      "agent_config_tools_skill_catalog_rationale_87",
+      "agent_config_tools_skill_catalog_scan_directory",
+      "any"
+    ],
+    "2": [
+      "agent_config_agents_base_md",
+      "agent_config_agents_claude_code_md",
+      "agent_config_agents_entry",
+      "agent_config_agents_gemini_cli_md",
+      "agent_config_claude_md",
+      "agent_config_gemini_md",
+      "agent_config_skills_go_testing_skill_go_testing",
+      "agent_config_skills_sdd_onboard_skill_sdd_onboard",
+      "agent_config_skills_skill_creator_skill_skill_creator",
+      "concept_engram"
+    ],
+    "3": [
+      "agent_config_changelog_md",
+      "agent_config_config_skill_registry_md",
+      "agent_config_docs_contributing",
+      "agent_config_docs_template_skill",
+      "agent_config_project_templates_agents",
+      "agent_config_shared_skill_style_guide",
+      "agent_config_skills_skill_optimizer_skill_skill_optimizer",
+      "agent_config_skills_skill_registry_skill_skill_registry",
+      "concept_skill",
+      "concept_skills_system"
+    ],
+    "4": [
+      "agent_config_skills_sdd_apply_skill_sdd_apply",
+      "agent_config_skills_sdd_archive_skill_sdd_archive",
+      "agent_config_skills_sdd_design_skill_sdd_design",
+      "agent_config_skills_sdd_explore_skill_sdd_explore",
+      "agent_config_skills_sdd_init_skill_sdd_init",
+      "agent_config_skills_sdd_propose_skill_sdd_propose",
+      "agent_config_skills_sdd_spec_skill_sdd_spec",
+      "agent_config_skills_sdd_tasks_skill_sdd_tasks",
+      "agent_config_skills_sdd_verify_skill_sdd_verify",
+      "concept_sdd_workflow"
+    ],
+    "5": [
+      "agent_config_docs_engram_convention",
+      "agent_config_docs_openspec_convention",
+      "agent_config_docs_persistence_contract",
+      "agent_config_shared_sdd_phase_common_md",
+      "agent_config_shared_skill_resolver_md",
+      "agent_config_skills_judgment_day_skill_judgment_day",
+      "concept_engram_persistence",
+      "concept_hybrid_persistence",
+      "concept_openspec_persistence"
+    ],
+    "6": [
+      "agent_config_agents_antigravity_md",
+      "agent_config_config_error_log_md",
+      "agent_config_config_governance_protocol_md",
+      "agent_config_config_skill_audit_report_md",
+      "agent_config_readme_md",
+      "agent_config_shared_routing_md",
+      "agent_config_shared_skill_style_guide_md",
+      "agent_config_skills_auditor_skill_auditor"
+    ],
+    "7": [
+      "agent_config_skills_report_md",
+      "agent_config_tools_skill_catalog",
+      "agent_config_tools_skill_catalog_build_version_map",
+      "agent_config_tools_skill_catalog_content_hash",
+      "agent_config_tools_skill_catalog_print_report",
+      "agent_config_tools_skill_catalog_rationale_130",
+      "agent_config_tools_skill_catalog_rationale_205",
+      "agent_config_tools_skill_catalog_rationale_58"
+    ],
+    "8": [
+      "agent_config_tools_skill_catalog_archive_duplicates",
+      "agent_config_tools_skill_catalog_generate_registry",
+      "agent_config_tools_skill_catalog_identify_active",
+      "agent_config_tools_skill_catalog_main",
+      "agent_config_tools_skill_catalog_rationale_138",
+      "agent_config_tools_skill_catalog_rationale_352",
+      "agent_config_tools_skill_catalog_rationale_391",
+      "path"
+    ],
+    "9": [
+      "agent_config_hermes_profiles_chat_fast_soul",
+      "agent_config_hermes_profiles_chat_general_soul",
+      "agent_config_hermes_profiles_coder_soul",
+      "agent_config_hermes_profiles_ollama_soul",
+      "agent_config_hermes_profiles_research_soul",
+      "agent_config_hermes_profiles_vision_soul"
+    ],
+    "10": [
+      "agent_config_tools_skill_catalog_find_duplicates",
+      "agent_config_tools_skill_catalog_rationale_122"
+    ],
+    "11": [
+      "agent_config_tools_skill_catalog_generate_recommendations",
+      "agent_config_tools_skill_catalog_rationale_157"
+    ],
+    "12": [
+      "agent_config_tools_skill_catalog_print_json",
+      "agent_config_tools_skill_catalog_rationale_252"
+    ],
+    "13": [
+      "agent_config_docs_distillation_protocol"
+    ],
+    "14": [
+      "agent_config_docs_validation_framework"
+    ],
+    "15": [
+      "agent_config_shared_global_error_log"
+    ],
+    "16": [
+      "agent_config_shared_vision_md"
+    ],
+    "17": [
+      "agent_config_skills_conversation_distillation_skill_conversation_distillation"
+    ],
+    "18": [
+      "agent_config_skills_error_miner_skill_error_miner"
+    ],
+    "19": [
+      "agent_config_skills_skill_auditor_skill_skill_auditor"
+    ],
+    "20": [
+      "agent_config_skills_skill_migrator_skill_skill_migrator"
+    ]
+  },
+  "cohesion": {
+    "0": 0.2833333333333333,
+    "1": 0.2545454545454545,
+    "2": 0.24444444444444444,
+    "3": 0.24444444444444444,
+    "4": 0.2,
+    "5": 0.4444444444444444,
+    "6": 0.2857142857142857,
+    "7": 0.25,
+    "8": 0.35714285714285715,
+    "9": 0.3333333333333333,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0
+  },
+  "gods": [
+    {
+      "id": "agent_config_agents_base_md",
+      "label": "Agent Base Instructions",
+      "degree": 24
+    },
+    {
+      "id": "agent_config_config_skill_registry_md",
+      "label": "Skill Registry",
+      "degree": 15
+    },
+    {
+      "id": "concept_sdd_workflow",
+      "label": "SDD Workflow",
+      "degree": 14
+    },
+    {
+      "id": "agent_config_docs_architecture",
+      "label": "Architecture Documentation",
+      "degree": 14
+    },
+    {
+      "id": "agent_config_tools_skill_catalog_main",
+      "label": "main()",
+      "degree": 11
+    },
+    {
+      "id": "agent_config_readme_md",
+      "label": "Agent Config README",
+      "degree": 11
+    },
+    {
+      "id": "agent_config_tools_skill_catalog_scan_directory",
+      "label": "scan_directory()",
+      "degree": 10
+    },
+    {
+      "id": "agent_config_config_governance_protocol_md",
+      "label": "Governance Protocol",
+      "degree": 10
+    },
+    {
+      "id": "agent_config_docs_components",
+      "label": "Components Reference",
+      "degree": 10
+    },
+    {
+      "id": "agent_config_docs_load_flow",
+      "label": "Load Flow Documentation",
+      "degree": 9
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Agent Base Instructions",
+      "target": "Error Log",
+      "source_files": [
+        "agent-config/agents/base.md",
+        "agent-config/.config/error_log.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "bridges separate communities; peripheral node `Error Log` unexpectedly reaches hub `Agent Base Instructions`"
+    },
+    {
+      "source": "Agent Base Instructions",
+      "target": "Model Routing",
+      "source_files": [
+        "agent-config/agents/base.md",
+        "agent-config/shared/routing.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "bridges separate communities; peripheral node `Model Routing` unexpectedly reaches hub `Agent Base Instructions`"
+    },
+    {
+      "source": "Agent Base Instructions",
+      "target": "Skill: sdd-apply",
+      "source_files": [
+        "agent-config/agents/base.md",
+        "agent-config/skills/sdd-apply/SKILL.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "bridges separate communities; peripheral node `Skill: sdd-apply` unexpectedly reaches hub `Agent Base Instructions`"
+    },
+    {
+      "source": "Agent Base Instructions",
+      "target": "Skill: sdd-archive",
+      "source_files": [
+        "agent-config/agents/base.md",
+        "agent-config/skills/sdd-archive/SKILL.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "bridges separate communities; peripheral node `Skill: sdd-archive` unexpectedly reaches hub `Agent Base Instructions`"
+    },
+    {
+      "source": "Agent Base Instructions",
+      "target": "Skill: sdd-init",
+      "source_files": [
+        "agent-config/agents/base.md",
+        "agent-config/skills/sdd-init/SKILL.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "bridges separate communities; peripheral node `Skill: sdd-init` unexpectedly reaches hub `Agent Base Instructions`"
+    }
+  ],
+  "tokens": {
+    "input": 75032,
+    "output": 15921
+  }
+}
